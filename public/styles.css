@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&family=Source+Sans+Pro:wght@400&display=swap');
+
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    border: none;
+    padding: 0;
+}
+
+body, input {
+    font-size: 1rem;
+    font-family: 'Source Sans Pro', sans-serif;}
+header {
+    margin: 2rem auto 1rem;
+    max-width: -moz-fit-content;
+    max-width: fit-content;
+}
+
+h1{
+    font-size: 2.5rem;
+    font-family: 'Roboto', sans-serif;
+
+}
+h2 {
+    font-size: 1.5rem;
+    font-family: 'Roboto', sans-serif;
+
+}
+
+form {
+    max-width: -moz-fit-content;
+    max-width: fit-content;
+    margin: 2rem;
+    background: rgba(151, 150, 150, 0.5);
+    padding: 1.5rem 2rem;
+    border-radius: 10px;
+}
+
+h1, h2, p, span, input {
+    margin: 1rem 0;
+}
+
+input[type='text'], 
+input[type='submit'],
+input[type='number'],
+input[type='date'] {
+    padding: 0.5rem;
+    border-radius: 5px;
+    display: block;
+    width: 100%;
+}
+
+input[type='submit'] {
+    cursor: pointer;
+}
+
+span {
+    background-color: rgba(233, 220, 220, 0.5);
+    padding: 0.5rem;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.documentation {
+    display: flex;
+    flex-direction: column;
+    max-width: -moz-fit-content;
+    max-width: fit-content;
+    margin: 1rem auto;
+    padding: 0.5rem;
+}
+.documentation h2  {
+    font-size: 1.3rem;
+    margin: 0.5rem;
+}
+.documentation p  {
+    font-size: 1rem;
+    margin: 0.5rem;
+
+}
