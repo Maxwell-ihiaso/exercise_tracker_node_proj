@@ -1,8 +1,9 @@
 const express = require("express");
 const cors = require("cors");
-const connectDB = require("./server/db/connectDB");
 const morgan = require("morgan");
+const createError = require('http-errors');
 require("dotenv").config();
+require('./server/db/mongooseInit');
 
 const app = express();
 
@@ -20,23 +21,27 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/", require("./server/routes/indexRoute"));
 app.use("/api", require("./server/routes/trackerRoute"));
 
-PORT = process.env.PORT || 5000;
-const start = async () => {
-  try {
-    console.log(`Connecting to DB...`);
-    await connectDB(process.env.MONGODB_URI);
-    console.log(`Connected to DB`);
-    console.log(`starting server...`);
-    app.listen(PORT, (err) => {
-      if (err) {
-        console.log(err);
-        process.exit(1);
-      }
-      console.log(`Server started. Running on port http://localhost:${PORT}`);
-    });
-  } catch (error) {
-    console.log(`Unable to conect to DB: ${error.message}`);
-  }
-};
+// Handle unknown routes
+app.use((req, res, next) => {
+  next(createError.NotFound());
+});
 
-start();
+// Error handler
+app.use((err, req, res, next) => {
+  res.status(err.status || 500).json({
+    error: {
+      status: err.status,
+      message: err.message,
+      
+    }
+  })
+})
+
+PORT = process.env.PORT;
+
+app.listen(PORT, (err) => {
+  if (err) {
+    console.log(err);
+  }
+  console.log(`Server started. Running on port http://localhost:${PORT}`);
+});

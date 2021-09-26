@@ -1,9 +1,10 @@
 const User = require("../models/Users");
+const { authUser, authExercise } = require('../auth/validate_model');
 
-const createUser = async (req, res) => {
-  const { username } = req.body;
-
+// ----------------------------------------------------createUser------------------------
+const createUser = async (req, res, next) => {
   try {
+    const username =  await authUser.validateAsync(req.body);
     const user = await new User({
       username,
     });
@@ -20,12 +21,14 @@ const createUser = async (req, res) => {
         res.status(500).json({ error: err.message });
       });   
   } catch (error) {
-    res.status(500).json({ error: err.message });
+    if (error.isJoi) error.status = 422;
+    next(error);
 
   }
 };
 
-const getAllUsers = async (req, res) => {
+// -----------------------------------------------------getAllUser-----------------------------
+const getAllUsers = async (req, res, next) => {
   try {
     const allUsers = await User.find({}, 'username');
     if (allUsers.length === 0) {
@@ -33,15 +36,15 @@ const getAllUsers = async (req, res) => {
     }
     res.status(200).json(allUsers);    
   } catch (error) {
-    res.status(500).json({message: `server error`})
+    next(error)
   }
 };
 
-const createUserExercise = async (req, res) => {
+// ----------------------------------------------createUserExercise----------------------------
+const createUserExercise = async (req, res, next) => {
   const { _id } = req.params;
-  const { description, duration, date } = req.body;
-  console.log(req.body)
 try {
+  const { description, duration, date } =   await authExercise.validateAsync(req.body);
   const isExistingUser = await User.findById({ _id });
   if (!isExistingUser) {
     return res.status(401).json({
@@ -67,12 +70,11 @@ try {
     .catch((error) => res.status(500).json({ message: error.message }));
   
 } catch (error) {
-  res.status(500).json({message: `id: ${_id} is incorrect.`})
-
+  next(error);
 }
 };
 
-
+// -------------------------------------------------GetUserExercise--------------------------------
 // @route  GET /api/users/:id/logs
 // @description  Get a user and all their exercises. Exercisecan be filtered?
 // by date using from and to queries
