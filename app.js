@@ -1,9 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
-const createError = require('http-errors');
+const createError = require("http-errors");
 require("dotenv").config();
-require('./server/db/mongooseInit');
+require("./server/db/mongooseInit");
 
 const app = express();
 
@@ -13,7 +13,9 @@ app.set("view engine", "ejs");
 // middlewares
 app.use(cors());
 app.use(morgan("dev"));
-app.use(express.static("public"));
+app.use("./views", express.static(__dirname + "./views"));
+app.use("./public", express.static(__dirname + "./public"));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -32,10 +34,9 @@ app.use((err, req, res, next) => {
     error: {
       status: err.status,
       message: err.message,
-      
-    }
-  })
-})
+    },
+  });
+});
 
 PORT = process.env.PORT;
 
