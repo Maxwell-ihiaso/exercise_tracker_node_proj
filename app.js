@@ -13,7 +13,6 @@ app.set("view engine", "ejs");
 // middlewares
 app.use(cors());
 app.use(morgan("dev"));
-app.use("./views", express.static(__dirname + "./views"));
 app.use("./public", express.static(__dirname + "./public"));
 
 app.use(express.json());
@@ -38,7 +37,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-PORT = process.env.PORT;
+PORT = process.env.PORT || 5000;
 
 app.listen(PORT, (err) => {
   if (err) {
