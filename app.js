@@ -3,7 +3,7 @@ const cors = require("cors");
 const morgan = require("morgan");
 const createError = require("http-errors");
 require("dotenv").config();
-require("./server/db/mongooseInit");
+require(__dirname + "/server/db/mongooseInit");
 
 const app = express();
 
@@ -13,14 +13,14 @@ app.set("view engine", "ejs");
 // middlewares
 app.use(cors());
 app.use(morgan("dev"));
-app.use("./public", express.static(__dirname + "./public"));
+app.use("/public", express.static(__dirname + "/public"));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Get requests
-app.use("/", require("./server/routes/indexRoute"));
-app.use("/api", require("./server/routes/trackerRoute"));
+app.use("/", require(__dirname + "/server/routes/indexRoute"));
+app.use("/api", require(__dirname + "/server/routes/trackerRoute"));
 
 // Handle unknown routes
 app.use((req, res, next) => {
