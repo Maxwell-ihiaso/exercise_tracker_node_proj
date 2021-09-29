@@ -4,14 +4,26 @@
   "description": "A freecodecamp node project built on node, express, and mongoose",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "builds": [
+      {
+        "src": "./app.js",
+        "use": "@vercel/node"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "/app.js"
+      }
+    ]
   },
   "keywords": [
     "node",
     "mongoose",
     "express",
     "ejs",
-    "mogoDB"
+    "mongoDB"
   ],
   "author": "Maxwell Ihiaso",
   "license": "MIT",
