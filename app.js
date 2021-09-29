@@ -8,7 +8,7 @@ require(__dirname + "/server/db/mongooseInit");
 const app = express();
 
 // view engine
-app.set("view engine", "ejs");
+// app.set("view engine", "ejs"); - using html for rendering
 
 // middlewares
 app.use(cors());
