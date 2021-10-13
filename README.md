@@ -1,5 +1,7 @@
 # Execise Tracker
 
+![Design preview for the frontend API rendering](./public/desktop_preview.png)
+
 ---
 
 ## Stacks
