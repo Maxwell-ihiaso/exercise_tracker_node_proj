@@ -8,12 +8,12 @@ require(__dirname + "/server/db/mongooseInit");
 const app = express();
 
 // view engine
-// app.set("view engine", "ejs"); - using html for rendering
+app.set("view engine", "ejs");
 
 // middlewares
 app.use(cors());
 app.use(morgan("dev"));
-app.use("/public", express.static(__dirname + "/public"));
+app.use(express.static(__dirname + "/public"));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

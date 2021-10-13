@@ -1,8 +1,8 @@
-const path = require("path");
+// const path = require("path");
 
 const indexControl = (req, res) => {
   // res.render("index");
-  res.sendFile(path.resolve("./views/index.html"));
+  res.render("index");
 };
 
 module.exports = indexControl;
