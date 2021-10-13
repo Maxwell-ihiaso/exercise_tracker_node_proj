@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "description": "A freecodecamp node project built on node, express, and mongoose",
   "main": "app.js",
+  "engines": {
+    "node": "14.x"
+  },
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "node app.js"
   },
   "keywords": [
     "node",
