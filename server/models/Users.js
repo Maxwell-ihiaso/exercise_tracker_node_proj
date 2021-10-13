@@ -4,17 +4,19 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
   username: {
     type: String,
-    required: true,
     trim: true,
+    required: true,
   },
-  log: [{
-    description: {type:String, required: true},
-    duration: {type:Number, required: true},
-    date: {
-      type: Date,
-      default: Date.now,      
-    }
-  }],
+  log: [
+    {
+      description: { type: String, required: true },
+      duration: { type: Number, required: true },
+      date: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+  ],
 });
 
 module.exports = mongoose.model("User", UserSchema);

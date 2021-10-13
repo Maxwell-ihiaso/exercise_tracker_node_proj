@@ -14,7 +14,6 @@ const app = express();
 app.use(cors());
 app.use(morgan("dev"));
 app.use("/public", express.static(__dirname + "/public"));
-app.use("/views", express.static(__dirname + "/views"));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

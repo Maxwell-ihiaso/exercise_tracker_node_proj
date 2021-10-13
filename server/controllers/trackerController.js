@@ -1,15 +1,14 @@
 const User = require("../models/Users");
 const { authUser, authExercise } = require("../auth/validate_model");
+const createError = require("http-errors");
 
 // ----------------------------------------------------createUser------------------------
 const createUser = async (req, res, next) => {
   try {
     const username = await authUser.validateAsync(req.body);
-    const user = await new User({
-      username,
-    });
+    const user = new User(username);
 
-    user
+    await user
       .save()
       .then((doc) => {
         res.status(200).json({
@@ -31,7 +30,7 @@ const getAllUsers = async (req, res, next) => {
   try {
     const allUsers = await User.find({}, "username");
     if (allUsers.length === 0) {
-      return res.status(200).json({ message: `No user found!` });
+      throw createError.NotFound();
     }
     res.status(200).json(allUsers);
   } catch (error) {
@@ -42,15 +41,16 @@ const getAllUsers = async (req, res, next) => {
 // ----------------------------------------------createUserExercise----------------------------
 const createUserExercise = async (req, res, next) => {
   const { _id } = req.params;
+  delete req.body._id;
   try {
     const { description, duration, date } = await authExercise.validateAsync(
       req.body
     );
     const isExistingUser = await User.findById({ _id });
     if (!isExistingUser) {
-      return res.status(401).json({
-        message: `user with id: ${_id} does not exist. Create a user first`,
-      });
+      throw createError.NotFound(
+        `user with id: ${_id} does not exist. Create a user first`
+      );
     }
 
     await User.findByIdAndUpdate(
@@ -67,13 +67,13 @@ const createUserExercise = async (req, res, next) => {
       { new: true }
     )
       .then((newExercise) => {
-        const log = newExercise.log[newExercise.log.length - 1];
+        const newLog = newExercise.log[newExercise.log.length - 1];
         res.status(200).json({
           _id: newExercise._id,
           username: newExercise.username,
-          description: log.description,
-          duration: log.duration,
-          date: new Date(log.date).toDateString(),
+          description: newLog.description,
+          duration: newLog.duration,
+          date: new Date(newLog.date).toDateString(),
         });
       })
       .catch((error) => res.status(500).json({ message: error.message }));
@@ -84,19 +84,17 @@ const createUserExercise = async (req, res, next) => {
 
 // -------------------------------------------------GetUserExercise--------------------------------
 // @route  GET /api/users/:id/logs
-// @description  Get a user and all their exercises. Exercisecan be filtered?
-// by date using from and to queries
-const getUserExercises = async (req, res) => {
+// @desc  Get a user and all their exercises. Exercise can be filtered?
+//         by date using from and to queries
+const getUserExercises = async (req, res, next) => {
   const { _id } = req.params;
   var filter = req.query;
   try {
     const isExistingUser = await User.findById({ _id }, { "log._id": 0 });
     if (!isExistingUser) {
-      return res
-        .status(404)
-        .json({ error: `User does not exist. Create a user` });
+      throw createError.NotFound(`user does not exist`);
     }
-
+    // logic for filtering dates baseed on given query {from & to}
     const logFilter = isExistingUser.log.filter((doc) =>
       filter.hasOwnProperty("from") && filter.hasOwnProperty("to")
         ? doc.date >= new Date(filter.from) && doc.date <= new Date(filter.to)
@@ -106,7 +104,7 @@ const getUserExercises = async (req, res) => {
         ? doc.date <= new Date(filter.to)
         : doc
     );
-
+    // Logic to llimit what has been filtered based on limit query
     const logLimit = filter.hasOwnProperty("limit")
       ? logFilter.splice(0, filter.limit)
       : logFilter;
@@ -117,13 +115,13 @@ const getUserExercises = async (req, res) => {
       _id: isExistingUser._id,
       log: logLimit.map((doc) => ({
         description: doc.description,
-        duuration: doc.duration,
+        duration: doc.duration,
         date: new Date(doc.date).toDateString(),
       })),
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 

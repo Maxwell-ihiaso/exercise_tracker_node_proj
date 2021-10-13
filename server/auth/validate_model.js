@@ -3,7 +3,7 @@ const Joi = require("joi");
 const authExercise = Joi.object({
   description: Joi.string().required(),
   duration: Joi.number().required(),
-  date: Joi.date().default(Date.now),
+  date: Joi.date().default(() => new Date()),
 });
 
 const authUser = Joi.object({

@@ -4,19 +4,7 @@
   "description": "A freecodecamp node project built on node, express, and mongoose",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "builds": [
-      {
-        "src": "./app.js",
-        "use": "@vercel/node"
-      }
-    ],
-    "routes": [
-      {
-        "src": "/(.*)",
-        "dest": "/app.js"
-      }
-    ]
+    "start": "nodemon app.js"
   },
   "keywords": [
     "node",
